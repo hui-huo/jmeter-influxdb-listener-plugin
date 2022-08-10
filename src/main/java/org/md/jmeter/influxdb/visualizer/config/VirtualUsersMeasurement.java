@@ -7,56 +7,60 @@ package org.md.jmeter.influxdb.visualizer.config;
  */
 public interface VirtualUsersMeasurement {
 
-	/**
-	 * Measurement name.
-	 */
-	String MEASUREMENT_NAME = "virtualUsers";
+    /**
+     * Measurement name.
+     */
+    String MEASUREMENT_NAME = "virtualUsers";
 
-	/**
-	 * Tags.
-	 * 
-	 * @author Alexander Wert
-	 */
-	interface Tags {
-		/**
-		 * Node name field
-		 */
-		String NODE_NAME = "nodeName";
+    /**
+     * Tags.
+     *
+     * @author Alexander Wert
+     */
+    interface Tags {
+        /**
+         * Node name field
+         */
+        String NODE_NAME = "nodeName";
 
-		String TEST_NAME = "testName";
+        String TEST_NAME = "testName";
 
-		String RUN_ID = "runId";
-	}
+        String RUN_ID = "runId";
+    }
 
-	/**
-	 * Fields.
-	 * 
-	 * @author Alexander Wert
-	 */
-	interface Fields {
-		/**
-		 * Minimum active threads field.
-		 */
-		String MIN_ACTIVE_THREADS = "minActiveThreads";
+    /**
+     * Fields.
+     *
+     * @author Alexander Wert
+     */
+    interface Fields {
+        /**
+         * Minimum active threads field.
+         */
+        String MIN_ACTIVE_THREADS = "minActiveThreads";
 
-		/**
-		 * Maximum active threads field.
-		 */
-		String MAX_ACTIVE_THREADS = "maxActiveThreads";
+        /**
+         * Maximum active threads field.
+         */
+        String MAX_ACTIVE_THREADS = "maxActiveThreads";
 
-		/**
-		 * Mean active threads field.
-		 */
-		String MEAN_ACTIVE_THREADS = "meanActiveThreads";
+        /**
+         * Mean active threads field.
+         */
+        String MEAN_ACTIVE_THREADS = "meanActiveThreads";
 
-		/**
-		 * Started threads field.
-		 */
-		String STARTED_THREADS = "startedThreads";
+        /**
+         * Started threads field.
+         */
+        String STARTED_THREADS = "startedThreads";
+        /**
+         * Finished threads field.
+         */
+        String FINISHED_THREADS = "finishedThreads";
 
-		/**
-		 * Finished threads field.
-		 */
-		String FINISHED_THREADS = "finishedThreads";
-	}
+        /**
+         * Running threads field.
+         */
+        String RUNNING_THREADS = "runningThreads";
+    }
 }

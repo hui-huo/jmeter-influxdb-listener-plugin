@@ -5,6 +5,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.jmeter.threads.JMeterContext;
+import org.apache.jmeter.threads.JMeterThread;
+import org.apache.jmeter.util.JMeterUtils;
 import org.md.jmeter.influxdb.visualizer.influxdb.client.InfluxDatabaseClient;
 import org.md.jmeter.influxdb.visualizer.config.InfluxDBConfig;
 import org.md.jmeter.influxdb.visualizer.config.TestStartEndMeasurement;
@@ -27,7 +30,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author Alexander Wert
  * @author Michael Derevyanko (minor changes and improvements)
- *
  */
 
 public class InfluxDatabaseBackendListenerClient extends AbstractBackendListenerClient implements Runnable {
@@ -96,11 +98,12 @@ public class InfluxDatabaseBackendListenerClient extends AbstractBackendListener
      */
     private boolean recordSubSamples;
 
+    private int runningThreads;
+
     /**
      * Processes sampler results.
      */
     public void handleSampleResults(List<SampleResult> sampleResults, BackendListenerContext context) {
-
 
         // Gather all the listeners
         List<SampleResult> allSampleResults = new ArrayList<>();
@@ -126,6 +129,8 @@ public class InfluxDatabaseBackendListenerClient extends AbstractBackendListener
                 sampleResultContext.setTimeToSet(System.currentTimeMillis() * ONE_MS_IN_NANOSECONDS + this.getUniqueNumberForTheSamplerThread());
                 sampleResultContext.setPrecisionToSet(TimeUnit.NANOSECONDS);
                 sampleResultContext.setErrorBodyToBeSaved(context.getBooleanParameter(KEY_INCLUDE_BODY_OF_FAILURES, false));
+                sampleResultContext.setGroupName(JMeterContextService.getContext().getThreadGroup().getName());
+                sampleResultContext.setRunningThreads(this.runningThreads);
 
                 var sampleResultPointProvider = new SampleResultPointProvider(sampleResultContext);
 
@@ -187,7 +192,7 @@ public class InfluxDatabaseBackendListenerClient extends AbstractBackendListener
         LOGGER.info("Shutting down influxDB scheduler...");
         this.scheduler.shutdown();
 
-        addVirtualUsersMetrics(0, 0, 0, 0, JMeterContextService.getThreadCounts().finishedThreads);
+        addVirtualUsersMetrics(0, 0, 0, 0, JMeterContextService.getThreadCounts().finishedThreads, 0);
 
         Point teardownPoint = Point.measurement(TestStartEndMeasurement.MEASUREMENT_NAME).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag(TestStartEndMeasurement.Tags.TYPE, TestStartEndMeasurement.Values.FINISHED)
@@ -216,12 +221,15 @@ public class InfluxDatabaseBackendListenerClient extends AbstractBackendListener
      */
     public void run() {
         ThreadCounts tc = JMeterContextService.getThreadCounts();
+        this.runningThreads = tc.startedThreads - tc.finishedThreads;
 
         this.addVirtualUsersMetrics(getUserMetrics().getMinActiveThreads(),
                 getUserMetrics().getMeanActiveThreads(),
                 getUserMetrics().getMaxActiveThreads(),
                 tc.startedThreads,
-                tc.finishedThreads);
+                tc.finishedThreads,
+                this.runningThreads
+        );
     }
 
     /**
@@ -263,16 +271,17 @@ public class InfluxDatabaseBackendListenerClient extends AbstractBackendListener
     /**
      * Writes thread metrics.
      */
-    private void addVirtualUsersMetrics(int minActiveThreads, int meanActiveThreads, int maxActiveThreads, int startedThreads, int finishedThreads) {
+    private void addVirtualUsersMetrics(int minActiveThreads, int meanActiveThreads, int maxActiveThreads, int startedThreads, int finishedThreads, int runningThreads) {
         Point virtualUsersMetricsPoint = Point.measurement(VirtualUsersMeasurement.MEASUREMENT_NAME).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-        .addField(VirtualUsersMeasurement.Fields.MIN_ACTIVE_THREADS, minActiveThreads)
-        .addField(VirtualUsersMeasurement.Fields.MAX_ACTIVE_THREADS, maxActiveThreads)
-        .addField(VirtualUsersMeasurement.Fields.MEAN_ACTIVE_THREADS, meanActiveThreads)
-        .addField(VirtualUsersMeasurement.Fields.STARTED_THREADS, startedThreads)
-        .addField(VirtualUsersMeasurement.Fields.FINISHED_THREADS, finishedThreads)
-        .tag(VirtualUsersMeasurement.Tags.NODE_NAME, this.nodeName)
-        .tag(VirtualUsersMeasurement.Tags.TEST_NAME, this.testName)
-        .tag(VirtualUsersMeasurement.Tags.RUN_ID, this.runId).build();
+                .addField(VirtualUsersMeasurement.Fields.MIN_ACTIVE_THREADS, minActiveThreads)
+                .addField(VirtualUsersMeasurement.Fields.MAX_ACTIVE_THREADS, maxActiveThreads)
+                .addField(VirtualUsersMeasurement.Fields.MEAN_ACTIVE_THREADS, meanActiveThreads)
+                .addField(VirtualUsersMeasurement.Fields.STARTED_THREADS, startedThreads)
+                .addField(VirtualUsersMeasurement.Fields.FINISHED_THREADS, finishedThreads)
+                .addField(VirtualUsersMeasurement.Fields.RUNNING_THREADS, runningThreads)
+                .tag(VirtualUsersMeasurement.Tags.NODE_NAME, this.nodeName)
+                .tag(VirtualUsersMeasurement.Tags.TEST_NAME, this.testName)
+                .tag(VirtualUsersMeasurement.Tags.RUN_ID, this.runId).build();
 
         this.influxDatabaseClient.write(virtualUsersMetricsPoint);
     }

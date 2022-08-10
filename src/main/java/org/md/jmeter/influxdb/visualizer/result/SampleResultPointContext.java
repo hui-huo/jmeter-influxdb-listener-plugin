@@ -19,16 +19,38 @@ public class SampleResultPointContext {
     private String testName;
     boolean errorBodyToBeSaved;
 
+    private String groupName;
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getRunningThreads() {
+        return this.runningThreads.toString();
+    }
+
+    public void setRunningThreads(int runningThreads) {
+        this.runningThreads = runningThreads;
+    }
+
+    private Integer runningThreads;
+
     /**
      * Checks whether the body of the failed repose is going to be saved.
+     *
      * @return true to save body; otherwise false to skip saving.
      */
     public boolean isErrorBodyToBeSaved() {
-        return errorBodyToBeSaved ;
+        return errorBodyToBeSaved;
     }
 
     /**
      * Sets the option to save failed repose body.
+     *
      * @param flag represents the option.
      */
     public void setErrorBodyToBeSaved(boolean flag) {
@@ -37,6 +59,7 @@ public class SampleResultPointContext {
 
     /**
      * Gets the run id, set in jmeter option.
+     *
      * @return returns run id.
      */
     public String getRunId() {
@@ -45,6 +68,7 @@ public class SampleResultPointContext {
 
     /**
      * Sets run id.
+     *
      * @param runId represents the run id.
      */
     public void setRunId(String runId) {
@@ -53,6 +77,7 @@ public class SampleResultPointContext {
 
     /**
      * Gets the node name to sort out the PC from what test has been started.
+     *
      * @return the node name.
      */
     public String getNodeName() {
@@ -61,6 +86,7 @@ public class SampleResultPointContext {
 
     /**
      * Sets the node name.
+     *
      * @param nodeName the node name.
      */
     public void setNodeName(String nodeName) {
@@ -69,6 +95,7 @@ public class SampleResultPointContext {
 
     /**
      * Gets the {@link SampleResult}.
+     *
      * @return sample result.
      */
     public SampleResult getSampleResult() {
@@ -77,6 +104,7 @@ public class SampleResultPointContext {
 
     /**
      * Sets {@link SampleResult}.
+     *
      * @param sampleResult {@link SampleResult}
      */
     public void setSampleResult(SampleResult sampleResult) {
@@ -85,6 +113,7 @@ public class SampleResultPointContext {
 
     /**
      * Gets the time frame of the further {@link org.influxdb.dto.Point}.
+     *
      * @return time represented in number.
      */
     public long getTimeToSet() {
@@ -93,6 +122,7 @@ public class SampleResultPointContext {
 
     /**
      * Sets time of the further {@link org.influxdb.dto.Point}.
+     *
      * @param timeToSet the time represented in number.
      */
     public void setTimeToSet(long timeToSet) {
@@ -101,6 +131,7 @@ public class SampleResultPointContext {
 
     /**
      * Gets the time precision to set.
+     *
      * @return the time.
      */
     public TimeUnit getPrecisionToSet() {
@@ -109,6 +140,7 @@ public class SampleResultPointContext {
 
     /**
      * Sets the precision to set.
+     *
      * @param precisionToSet the {@link TimeUnit} of the precision to set.
      */
     public void setPrecisionToSet(TimeUnit precisionToSet) {
@@ -117,6 +149,7 @@ public class SampleResultPointContext {
 
     /**
      * Gets the test name.
+     *
      * @return the test name.
      */
     public String getTestName() {
@@ -125,6 +158,7 @@ public class SampleResultPointContext {
 
     /**
      * Sets the test name.
+     *
      * @param testName the test name.
      */
     public void setTestName(String testName) {

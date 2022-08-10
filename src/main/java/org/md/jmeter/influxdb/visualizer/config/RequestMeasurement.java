@@ -8,119 +8,86 @@ package org.md.jmeter.influxdb.visualizer.config;
  */
 public interface RequestMeasurement {
 
-	/**
-	 * Measurement name.
-	 */
-	String MEASUREMENT_NAME = "requestsRaw";
+    /**
+     * Measurement name.
+     */
+    String MEASUREMENT_NAME = "requestsRaw";
 
-	/**
-	 * Tags.
-	 *
-	 * @author Alexander Wert
-	 * @author Michael Derevyanko (minor changes and improvements)
-	 */
-	interface Tags {
-		/**
-		 * Request name tag.
-		 */
-		String REQUEST_NAME = "requestName";
+    /**
+     * Tags.
+     *
+     * @author Alexander Wert
+     * @author Michael Derevyanko (minor changes and improvements)
+     */
+    interface Tags {
+        /**
+         * Request name tag.
+         */
+        String REQUEST_NAME = "requestName";
 
-		/**
-		 * Influx DB tag for a unique identifier for each execution(aka 'run') of a load test.
-		 */
-		String RUN_ID = "runId";
+        /**
+         * Influx DB tag for a unique identifier for each execution(aka 'run') of a load test.
+         */
+        String RUN_ID = "runId";
 
-		/**
-		 * Test name field.
-		 */
-		String TEST_NAME = "testName";
+        /**
+         * Test name field.
+         */
+        String TEST_NAME = "testName";
 
-		/**
-		 * Node name field.
-		 */
-		String NODE_NAME = "nodeName";
+        /**
+         * Node name field.
+         */
+        String NODE_NAME = "nodeName";
 
-		/**
-		 * Response code field.
-		 */
-		String RESULT_CODE = "responseCode";
+        /**
+         * Response code field.
+         */
+        String RESULT_CODE = "responseCode";
 
-		/**
-		 * Error message.
-		 */
-		String ERROR_MSG = "errorMessage";
+        /**
+         * Thread group name
+         */
+        String GROUP_NAME = "group_name";
 
-		/**
-		 * Error response body.
-		 */
-		String ERROR_RESPONSE_BODY = "errorResponseBody";
-
-		/**
-		 * Error response headers.
-		 */
-		String ERROR_RESPONSE_HEADERS = "errorResponseHeaders";
-
-		/**
-		 * Error response URL.
-		 */
-		String ERROR_REQUEST_URL = "errorRequestUrl";
-
-		/**
-		 * Error request headers.
-		 */
-		String ERROR_REQUEST_HEADERS = "errorRequestHeaders";
-
-		/**
-		 * Sampler data.
-		 */
-		String SAMPLER_DATA = "samplerData";
-	}
-
-	/**
-	 * Fields.
-	 *
-	 * @author Alexander Wert
-	 */
-	interface Fields {
-		/**
-		 * Response time field.
-		 */
-		String RESPONSE_TIME = "responseTime";
-
-		/**
-		 * Error count field.
-		 */
-		String ERROR_COUNT = "errorCount";
-
-		/**
-		 * Error count field.
-		 */
-		String REQUEST_COUNT = "count";
+        /**
+         * Running threads field.
+         */
+        String RUNNING_THREADS = "runningThreads";
 
 
-		/**
-		 * Sent Bytes field.
-		 */
-		String SENT_BYTES = "sentBytes";
+    }
 
-		/**
-		 * Received Bytes field.
-		 */
-		String RECEIVED_BYTES = "receivedBytes";
+    /**
+     * Fields.
+     *
+     * @author Alexander Wert
+     */
+    interface Fields {
+        /**
+         * Response time field.
+         */
+        String RESPONSE_TIME = "responseTime";
 
-		/**
-		 * Latency field.
-		 */
-		String LATENCY = "latency";
+        /**
+         * Error count field.
+         */
+        String ERROR_COUNT = "errorCount";
 
-		/**
-		 * Connect Time field.
-		 */
-		String CONNECT_TIME = "connectTime";
+        /**
+         * Error count field.
+         */
+        String REQUEST_COUNT = "count";
 
-		/**
-		 * Processing Time field.
-		 */
-		String PROCESSING_TIME = "processingTime";
-	}
+
+        /**
+         * Sent Bytes field.
+         */
+        String SENT_BYTES = "sentBytes";
+
+        /**
+         * Received Bytes field.
+         */
+        String RECEIVED_BYTES = "receivedBytes";
+    }
 }
