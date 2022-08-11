@@ -14,7 +14,6 @@ public class SampleResultPointProvider {
 
     private final SampleResultPointContext sampleResultContext;
     private final String assertionFailureMessage;
-    private Point errorPoint;
 
     /**
      * Creates the new instance of the {@link SampleResultPointProvider}.
@@ -28,26 +27,11 @@ public class SampleResultPointProvider {
     }
 
     /**
-     * Gets {@link Point}, returns the OK or KO jmeter point, depends from the sample result.
-     *
-     * @return {@link Point} to save.
-     */
-    public Point getPoint() {
-
-        if (this.assertionFailureMessage == null) {
-            return this.getOKPointBuilder()
-                    .build();
-        } else {
-            return this.getErrorPoint().build();
-        }
-    }
-
-    /**
      * Gets KO jmeter {@link Point}, saves the assertion message and response error body - depends from the settings.
      *
      * @return KO jmeter {@link Point}.
      */
-    private Point.Builder getErrorPoint() {
+    public Point.Builder getErrorPoint() {
         return Point.measurement(RequestErrorMeasurement.MEASUREMENT_NAME).time(this.sampleResultContext.getTimeToSet(), this.sampleResultContext.getPrecisionToSet())
                 .tag(RequestErrorMeasurement.Tags.REQUEST_NAME, this.sampleResultContext.getSampleResult().getSampleLabel())
                 .tag(RequestErrorMeasurement.Tags.RUN_ID, this.sampleResultContext.getRunId())
@@ -56,7 +40,6 @@ public class SampleResultPointProvider {
                 .tag(RequestErrorMeasurement.Tags.RESULT_CODE, this.sampleResultContext.getSampleResult().getResponseCode())
                 .tag(RequestErrorMeasurement.Tags.ERROR_MSG, this.assertionFailureMessage)
                 .tag(RequestErrorMeasurement.Tags.ERROR_RESPONSE_BODY, this.getErrorBody())
-                .tag(RequestErrorMeasurement.Tags.GROUP_NAME, this.sampleResultContext.getGroupName())
                 .addField(RequestErrorMeasurement.Fields.ERROR_COUNT, this.sampleResultContext.getSampleResult().getErrorCount());
     }
 
@@ -75,25 +58,11 @@ public class SampleResultPointProvider {
     }
 
     /**
-     * Gets error body.
-     *
-     * @return returns body of the failed response.
-     */
-    private String getSamplerData() {
-        String samplerData = this.sampleResultContext.getSampleResult().getSamplerData();
-        if (samplerData != null && !samplerData.isEmpty()) {
-            return InfluxDatabaseUtility.getEscapedString(samplerData);
-        }
-
-        return "SamplerDataIsEmpty";
-    }
-
-    /**
      * Builds the OK jmeter {@link Point}.
      *
      * @return OK jmeter {@link Point}.
      */
-    private Point.Builder getOKPointBuilder() {
+    public Point.Builder getOKPointBuilder() {
 
         return Point.measurement(RequestMeasurement.MEASUREMENT_NAME).time(this.sampleResultContext.getTimeToSet(), this.sampleResultContext.getPrecisionToSet())
                 .tag(RequestMeasurement.Tags.REQUEST_NAME, this.sampleResultContext.getSampleResult().getSampleLabel())
@@ -106,7 +75,6 @@ public class SampleResultPointProvider {
                 .addField(RequestMeasurement.Fields.RECEIVED_BYTES, this.sampleResultContext.getSampleResult().getBytesAsLong())
                 .addField(RequestMeasurement.Fields.SENT_BYTES, this.sampleResultContext.getSampleResult().getSentBytes())
                 .addField(RequestMeasurement.Fields.RESPONSE_TIME, this.sampleResultContext.getSampleResult().getTime())
-                .tag(RequestMeasurement.Tags.GROUP_NAME, this.sampleResultContext.getGroupName())
                 .tag(RequestMeasurement.Tags.RUNNING_THREADS, this.sampleResultContext.getRunningThreads());
     }
 }

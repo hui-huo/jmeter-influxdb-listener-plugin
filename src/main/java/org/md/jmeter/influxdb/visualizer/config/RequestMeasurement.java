@@ -46,11 +46,6 @@ public interface RequestMeasurement {
         String RESULT_CODE = "responseCode";
 
         /**
-         * Thread group name
-         */
-        String GROUP_NAME = "group_name";
-
-        /**
          * Running threads field.
          */
         String RUNNING_THREADS = "runningThreads";

@@ -129,13 +129,14 @@ public class InfluxDatabaseBackendListenerClient extends AbstractBackendListener
                 sampleResultContext.setTimeToSet(System.currentTimeMillis() * ONE_MS_IN_NANOSECONDS + this.getUniqueNumberForTheSamplerThread());
                 sampleResultContext.setPrecisionToSet(TimeUnit.NANOSECONDS);
                 sampleResultContext.setErrorBodyToBeSaved(context.getBooleanParameter(KEY_INCLUDE_BODY_OF_FAILURES, false));
-                sampleResultContext.setGroupName(JMeterContextService.getContext().getThreadGroup().getName());
                 sampleResultContext.setRunningThreads(this.runningThreads);
 
-                var sampleResultPointProvider = new SampleResultPointProvider(sampleResultContext);
+                SampleResultPointProvider sampleResultPointProvider = new SampleResultPointProvider(sampleResultContext);
 
-                Point resultPoint = sampleResultPointProvider.getPoint();
-                this.influxDatabaseClient.write(resultPoint);
+                if (sampleResultContext.getSampleResult().getFirstAssertionFailureMessage() != null) {
+                    this.influxDatabaseClient.write(sampleResultPointProvider.getErrorPoint().build());
+                }
+                this.influxDatabaseClient.write(sampleResultPointProvider.getOKPointBuilder().build());
             }
         }
     }
@@ -172,6 +173,7 @@ public class InfluxDatabaseBackendListenerClient extends AbstractBackendListener
         Point setupPoint = Point.measurement(TestStartEndMeasurement.MEASUREMENT_NAME).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .tag(TestStartEndMeasurement.Tags.TYPE, TestStartEndMeasurement.Values.STARTED)
                 .tag(TestStartEndMeasurement.Tags.NODE_NAME, this.nodeName)
+                .tag(TestStartEndMeasurement.Tags.RUN_ID, this.runId)
                 .tag(TestStartEndMeasurement.Tags.TEST_NAME, this.testName)
                 .addField(TestStartEndMeasurement.Fields.PLACEHOLDER, "1")
                 .build();

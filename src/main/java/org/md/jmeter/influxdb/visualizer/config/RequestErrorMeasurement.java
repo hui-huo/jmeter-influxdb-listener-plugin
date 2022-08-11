@@ -43,11 +43,6 @@ public interface RequestErrorMeasurement {
          */
         String ERROR_RESPONSE_BODY = "errorResponseBody";
 
-        /**
-         * Thread group name
-         */
-        String GROUP_NAME = "group_name";
-
 
     }
 

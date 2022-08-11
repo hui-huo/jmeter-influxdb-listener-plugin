@@ -1,8 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-sourceCompatibility = 11
-version = '1.2'
+sourceCompatibility = 8
+version = '1.2.1'
 def title = 'JMeterInfluxDBListener'
 def archiveName = 'jmeter-plugin-influxdb-listener'
 
@@ -23,12 +23,17 @@ class JMeterRule implements ComponentMetadataRule {
 }
 
 dependencies {
-	implementation group: 'org.apache.jmeter', name: 'ApacheJMeter_core', version: '5.4.1'
-	implementation group: 'org.apache.jmeter', name: 'ApacheJMeter_java', version: '5.4.1'
-	implementation group: 'org.apache.jmeter', name: 'ApacheJMeter_components', version: '5.4.1'
-	implementation group: 'org.apache.jmeter', name: 'jorphan', version: '5.4.1'
-	implementation group: 'org.influxdb', name: 'influxdb-java', version: '2.21'
-	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+	implementation group: 'org.apache.jmeter', name: 'ApacheJMeter_core', version: '5.4.3'
+	implementation group: 'org.apache.jmeter', name: 'ApacheJMeter_java', version: '5.4.3'
+	implementation group: 'org.apache.jmeter', name: 'ApacheJMeter_components', version: '5.4.3'
+	implementation group: 'org.apache.jmeter', name: 'jorphan', version: '5.4.3'
+	implementation (group: 'org.influxdb', name: 'influxdb-java', version: '2.23') {
+		exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+	}
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.9'
+
+
 
 	components {
 		withModule("org.apache.jmeter:ApacheJMeter_core", JMeterRule)

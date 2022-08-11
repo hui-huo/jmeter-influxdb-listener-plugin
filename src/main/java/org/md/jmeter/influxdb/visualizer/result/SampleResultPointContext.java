@@ -19,15 +19,6 @@ public class SampleResultPointContext {
     private String testName;
     boolean errorBodyToBeSaved;
 
-    private String groupName;
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
 
     public String getRunningThreads() {
         return this.runningThreads.toString();
